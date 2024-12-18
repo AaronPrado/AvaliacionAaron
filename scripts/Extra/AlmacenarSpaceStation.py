@@ -3,11 +3,11 @@ import time
 import pymongo
 from pymongo import MongoClient
 
-endpoint = "http://api.citybik.es/v2/networks/bicicorunha"
+endpoint = "http://api.open-notify.org/iss-now.json"
 intervalo_tiempo = 3
-MONGO_URI = "mongodb://mongo:27017/"
-DB_NOMBRE = "CityBikes"
-COL_NOMBRE = "Corunha"
+MONGO_URI = "mongodb://localhost:27017/"
+DB_NOMBRE = "SpaceStation"
+COL_NOMBRE = "Estacion"
 
 def mongo_connect():
     cliente = MongoClient(MONGO_URI)
@@ -16,11 +16,16 @@ def mongo_connect():
     return coleccion
 
 def fetch_data():
+
     try:
         response = requests.get(endpoint)
-        response.raise_for_status()
-        data = response.json() 
-        return data.get("network", {}).get("stations", [])
+        response.raise_for_status() 
+        
+        data = response.json()
+        
+        iss_position = data.get("iss_position", {})
+        
+        return iss_position if iss_position else None
     except requests.exceptions.RequestException as e:
         print(f"Error al realizar la solicitud: {e}")
         return None

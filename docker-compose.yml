@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: bicis-mongo
+    networks:
+      - bicis-network
+    ports:
+      - "27017:27017"
+    restart: always
+
+  almacenar_script:
+    image: aaronprado/almacenar-almacenar_datos
+    container_name: almacenar-script
+    networks:
+      - bicis-network
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+    restart: always
+
+networks:
+  bicis-network:
+    driver: bridge
